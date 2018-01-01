@@ -1,0 +1,43 @@
+<div class="container color-dark">
+  <div class="col">
+	<top-talkers-component></top-talkers-component>  	
+  </div>
+  <div class="col">
+  	<div *ngIf="topTransfersChart">
+  		<canvas id="TransferCanvas">{{topTransfersChart}}</canvas>
+  	</div>
+  </div>
+  <div class="col">
+  	<div *ngIf="topTCPConnectionsChart">
+  		<canvas id="TopConnectionsCanvas">{{topTCPConnectionsChart}}</canvas>
+  	</div>
+  </div>
+  <div class="col">
+  	<top-tcp-ports-chart></top-tcp-ports-chart>
+  </div>
+
+</div>
+
+  <statistics-charts></statistics-charts>
+
+<div class="container color-light">
+	<div class="col">
+		<p class="sm">Search</p>
+		<form>
+			Source <input type="text" class="txt" name="saddress" placeholder="0.0.0.0" [(ngModel)]="saddress">
+			Destination <input type="text" class="txt" name="daddress" placeholder="0.0.0.0" [(ngModel)]="daddress">
+			Source Port <input type="text" class="txt" name="sport" [(ngModel)]="sport">
+			Destination Port <input type="text" class="txt" name="dport" [(ngModel)]="dport">
+			Start Date <input type="text" class="txt" name="startDate" [(ngModel)]="startDate">
+			End Date <input type="text" class="txt" name="endDate" [(ngModel)]="endDate">
+			<input type="submit" class="btn" value="Search" (click)="doSearch()">
+		</form>
+	</div>
+	<div class="col">
+		<p search-container>Results</p>
+		<p>Matching rows: {{ matchingRows }}</p>
+		<div *ngFor="let result of results">
+			{{ result }}
+		</div>
+	</div>
+</div>

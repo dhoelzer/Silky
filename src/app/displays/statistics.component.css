@@ -1,0 +1,14 @@
+.stats-container {
+	display: grid;
+	grid-template-columns: 33% 33% auto;
+}
+
+.col {
+	
+	padding: 1em;
+	
+}
+
+.color-dark {
+	background: #2885c4;
+}

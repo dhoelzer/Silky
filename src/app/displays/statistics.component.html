@@ -1,0 +1,11 @@
+<div class="stats-container color-dark">
+	<div class="col" *ngIf="stats30DayChart">
+   		<canvas id="30DayStats">{{stats30DayChart}}</canvas>
+    </div>
+    <div class="col" *ngIf="stats24HourChart">
+  		<canvas id="24HourStatsChart">{{stats24HourChart}}</canvas>
+	</div>
+  	<div class="col" *ngIf="stats60MinutesChart">
+  		<canvas id="60MinuteStatsChart">{{stats60MinutesChart}}</canvas>
+	</div>
+</div>
