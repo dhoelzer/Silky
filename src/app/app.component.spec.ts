@@ -1,3 +1,7 @@
+// Copyright 2017, David Hoelzer/Enclave Forensics Corporation - All Rights Reserved
+// No portion of this code may be used in any commercial product without first notifying Enclave Forensics Corporation
+// and clear attribution and credit for portions copied or otherwise utilized.
+
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 describe('AppComponent', () => {

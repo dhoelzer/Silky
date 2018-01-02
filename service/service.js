@@ -1,3 +1,7 @@
+// Copyright 2017, David Hoelzer/Enclave Forensics Corporation - All Rights Reserved
+// No portion of this code may be used in any commercial product without first notifying Enclave Forensics Corporation
+// and clear attribution and credit for portions copied or otherwise utilized.
+
 var sys = require('util');
 var exec = require('child_process').exec;
 var child;
@@ -61,9 +65,9 @@ app.get('/api/24HourStats', function(req, res) {
 })
 
 app.get('/api/60MinuteStats', function(req, res) {
-  var startTime = (new Date / 1000) - (3600);
-  var endTime = new Date / 1000;
-  var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=6 --pass=stdout | rwcount --bin-size=10 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
+  var startTime = Math.floor((new Date / 1000) - (3600));
+  var endTime = Math.floor(new Date / 1000);
+  var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=6 --pass=stdout | rwcount --bin-size=60 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
   child = exec(commandString, function(error, stdout, stderr) {
     res.send(stdout);

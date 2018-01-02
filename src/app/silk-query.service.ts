@@ -1,3 +1,7 @@
+// Copyright 2017, David Hoelzer/Enclave Forensics Corporation - All Rights Reserved
+// No portion of this code may be used in any commercial product without first notifying Enclave Forensics Corporation
+// and clear attribution and credit for portions copied or otherwise utilized.
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Statistics } from './models/Statistics';
@@ -19,6 +23,13 @@ export class SilkQueryService {
   	return result
 
   }
+
+    // You really won't see a greater granularity by refreshing more frequently, unless the network is pretty busy.
+    // The Silk logger caches and writes out chunks, so unless that cache has filled you will keep getting HTTP 304 messages
+    // until the data is updated on the disk.  If you wish to tune this, I'd suggest that you watch the charts run with
+    // a network monitor open in Chrome to make sure you're not just seeing a stream of 304 messages, which is
+    // really wasteful resources-wise.
+
 
   TopTCPPorts()
   {
