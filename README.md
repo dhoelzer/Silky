@@ -1,27 +1,21 @@
 # Silky
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.2.
+This project provides a simple interactive web interface to Netflow data managed within a Silk repository.  Currently, no authentication is provided, but this will be added soon.
 
-## Development server
+## Experimenting
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+After installing NodeJS onto the Silk repository, start the development version of Silky by running `ng serve --host 0.0.0.0&`.  This will begin serving the Angular interface.  Next, change into the "service" directory and start up the server-side service that runs (currently) on port 3000:  `node service.js`.  The `service.js` file must be started by a user who has the rights to access the Silk repository and the Silk tools must be in this user's execution path.
 
-## Code scaffolding
+With these two actions taken, you can now navigate to Navigate to `http://silk.host.com:4200/`, replacing `silk.host.com` with the DNS name or IP address of the repository.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Future
 
-## Build
+The next version of Silky will:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+* Provide authentication
+* Allow you to serve the entire application from the `service.js` application
+* Operate over TLS
+* Allow limited arbitrary searches
+* Provide an FFT analysis of periodic traffic flows in an attempt to identify beaconing activities
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+![Silky Screenshot](./screenshot.png "Silky Example")

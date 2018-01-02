@@ -38,5 +38,6 @@ testem.log
 /e2e/*.map
 
 # System Files
+._*
 .DS_Store
 Thumbs.db
