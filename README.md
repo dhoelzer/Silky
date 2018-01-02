@@ -19,3 +19,7 @@ The next version of Silky will:
 * Provide an FFT analysis of periodic traffic flows in an attempt to identify beaconing activities
 
 ![Silky Screenshot](./screenshot.png "Silky Example")
+
+# Copyright 2017, David Hoelzer/Enclave Forensics Corporation - All Rights Reserved
+No portion of this code may be used in any commercial product without first notifying Enclave Forensics Corporation and clear attribution and credit for portions copied or otherwise utilized.
+
