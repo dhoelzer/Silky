@@ -1,0 +1,28 @@
+.container {
+	display: grid;
+	grid-template-columns: repeat(6, 6fr);
+	padding: 1em;
+}
+
+.col {
+	padding: 10px;
+}
+.username-label {
+	grid-row: 1;
+	grid-column: 1;
+}
+
+.username-field {
+	grid-row: 1;
+	grid-column: 2;
+}
+
+.password-label {
+	grid-row: 2;
+	grid-column: 1;
+}
+
+.password-field {
+	grid-row: 2;
+	grid-column: 2;
+}

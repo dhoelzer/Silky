@@ -17,6 +17,8 @@ import { StatisticsComponent } from './displays/statistics.component';
 import { TopTCPPortsComponent } from './displays/topTCPPorts.component';
 
 import { LargeTransfer } from './models/largeTransfer';
+import { LoginComponent } from './login/login.component';
+import { UserServiceService } from './user-service.service';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,8 @@ import { LargeTransfer } from './models/largeTransfer';
     AboutComponent,
     TopTalkersComponent,
     StatisticsComponent,
-    TopTCPPortsComponent
+    TopTCPPortsComponent,
+    LoginComponent
   ],
   imports: [
     HttpClientModule,
@@ -33,7 +36,7 @@ import { LargeTransfer } from './models/largeTransfer';
     AppRoutingModule,
     FormsModule
   ],
-  providers: [SilkQueryService],
+  providers: [SilkQueryService, UserServiceService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
