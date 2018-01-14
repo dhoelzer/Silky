@@ -164,11 +164,8 @@ app.get('/api/largestTransfers', function(req, res) {
   })
 });
 
-// the "index" route, which serves the Angular app
-app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname,'/dist/index.html'))
-});
- 
+app.use(express.static('dist'))
+
 // the GET "foods" API endpoint
 app.get('/api/food', function (req, res) {
   if(!authorized(req)){
