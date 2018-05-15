@@ -14,9 +14,19 @@ export class AppComponent {
   title = 'Silky';
   version = '0.3'
   authenticated = false;
+  showHome = true;
+  showAbout = false;
+
+  goHome(){
+  	this.showAbout = false;
+  	this.showHome = true;
+  }
+  goAbout(){
+  	this.showAbout = true;
+  	this.showHome = false;
+  }
 
   authenticationEvent($event){
-  	console.log("app: "+$event)
   	this.authenticated = $event
   }
 

@@ -28,8 +28,7 @@ export class LoginComponent implements OnInit {
   	this.userService.attemptLogin(this.username, this.password).subscribe(data => {
       this.silk.setAuthToken(data["authToken"])
       if(data["authToken"]){ this.authed = true; }
-    console.log(this.authed)
-    this.authenticationNotice.emit(this.authed)
+      this.authenticationNotice.emit(this.authed)
   })
   }
 }

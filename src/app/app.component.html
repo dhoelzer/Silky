@@ -6,10 +6,12 @@
 	 </div>
 	 <div class="menu">
 	<ul>
-	  <li><a >Home</a></li>
-	  <li><a >About</a></li>
+	  <li><button (click)="goHome()">Home</button></li>
+	  <li><button (click)="goAbout()">About</button></li>
 	</ul>
 	</div>
+	<app-home *ngIf="showHome"></app-home>
+	<app-about *ngIf="showAbout"></app-about>
 </div>
 <div *ngIf="!authenticated">
 	<app-login (authenticationNotice)="authenticationEvent($event)"></app-login>
