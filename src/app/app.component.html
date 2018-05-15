@@ -1,11 +1,16 @@
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }} version {{ version }}!
-  </h1>
- </div>
-<ul>
-  <li><a routerLink="home">Home</a></li>
-  <li><a routerLink="about">About</a></li>
-</ul>
-
-<router-outlet></router-outlet>
+<div *ngIf="authenticated">
+	<div style="text-align:center">
+	  <h1>
+	    Welcome to {{ title }} version {{ version }}!
+	  </h1>
+	 </div>
+	 <div class="menu">
+	<ul>
+	  <li><a >Home</a></li>
+	  <li><a >About</a></li>
+	</ul>
+	</div>
+</div>
+<div *ngIf="!authenticated">
+	<app-login (authenticationNotice)="authenticationEvent($event)"></app-login>
+</div>

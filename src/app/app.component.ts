@@ -13,4 +13,11 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'Silky';
   version = '0.3'
+  authenticated = false;
+
+  authenticationEvent($event){
+  	console.log("app: "+$event)
+  	this.authenticated = $event
+  }
+
 }
