@@ -23,6 +23,16 @@ ul li a {
 	font-size: 1.5em;
 }
 
+button  {
+	border: 0;
+	display: block;
+	padding: 1em 3em;
+	background: #a5f883;
+	color: #003a61;
+	margin-bottom: 1em;
+	cursor: pointer;
+}
+
 a {
 	color: #fff;
 	text-decoration: none;

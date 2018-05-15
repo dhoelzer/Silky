@@ -53,7 +53,6 @@ app.post('/api/login', function(req, res) {
     var sessionID = genSessionID(32);
     res.send({"authToken":sessionID});
     valid_sessions.push(sessionID);
-    console.log(valid_sessions);
     return
   }
 res.send({"Authenticated":false});
@@ -72,7 +71,6 @@ app.get('/api/topTalkers', function(req, res) {
   var startTime = (new Date / 1000) - 3600;
   var topTenCommand = "rwfilter --type all --proto=0-255 --start-date="+startTime+" --pass=stdout | rwstats --count 10 --fields sip,proto --no-titles --delimited=, --values=packets --top --no-columns --no-final-delimiter | awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"source\\\":\\\"\"$1\"\\\", \\\"protocol\\\":\"$2\", \\\"packets\\\":\"$3\", \\\"_percent\\\":\"$4\", \\\"_tally\\\":\"$5\"}\";separator=\",\"}END{print \"]\";}'";
 
-  console.log(req)
   if(!authorized(req)){
     res.send({"Not Authorized":''});
     return
@@ -177,7 +175,7 @@ app.get('/api/food', function (req, res) {
   
 // HTTP listener
 app.listen(3000, function () {
-    console.log('Silk query service listening on port 3000!');
+    console.log('Silky is running.');
 });
 module.exports = app;
 
