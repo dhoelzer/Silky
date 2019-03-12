@@ -12,7 +12,7 @@ import { Component } from '@angular/core';
 
 export class AppComponent {
   title = 'Silky';
-  version = '0.3'
+  version = '0.4'
   authenticated = false;
   showHome = true;
   showAbout = false;

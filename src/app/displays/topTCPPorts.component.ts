@@ -4,7 +4,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { SilkQueryService } from '../silk-query.service';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 import { TopPorts } from '../models/topPorts';
 import { Chart } from 'chart.js'
 

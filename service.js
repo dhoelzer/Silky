@@ -1,71 +1,96 @@
-// Copyright 2017, David Hoelzer/Enclave Forensics Corporation - All Rights Reserved
+// Copyright 2017, 2018, 2019 David Hoelzer/Enclave Forensics Corporation - All Rights Reserved
 // No portion of this code may be used in any commercial product without first notifying Enclave Forensics Corporation
 // and clear attribution and credit for portions copied or otherwise utilized.
 
-var sys = require('util');
-var exec = require('child_process').exec;
-var child;
-
-const username = "admin";
-const password = "ChangeThisPassword!";
+// Class structure for messages sent through the websockets API.
+class Message {
+    constructor() {
+        /** The API name in the call used by the websocket API router.
+         * @member
+         */
+        this.apiEndpoint = "";
+        /** Any required parameters
+         * @member
+         */
+        this.parameters = "";
+    }
+}
 
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
- 
+const SocketServer = require('ws').Server;
+var sys = require('util');
+var exec = require('child_process').exec;
+const https = require('https')
 const app = express();
 
-var valid_sessions = new Array()
+var child;
+const username = "admin";
+const password = "ChangeThisPassword!";
 
-app.use(express.static(__dirname));
-
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-}); 
-
-function genSessionID(count) {
-    var _sym = 'abcdefghijklmno-$pqrstuvwxyz1234567890';
-    var str = '';
-
-    for(var i = 0; i < count; i++) {
-        str += _sym[parseInt(Math.random() * (_sym.length))];
+function handleSocketData(socket, message) {
+    var jsonMessage = Object
+    try {
+        jsonMessage = JSON.parse(message)
+    } catch (error) {
+        console.log("Invalid JSON message")
+        socket.send(JSON.stringify({
+            server: "invalid parameters"
+        }))
+        return
     }
-    return str
+    console.log("Message: " + message)
+    /*
+     *
+     * We cannot be certain that the socket message hasn't been tampered with or forged.  As a result,
+     * where necessary, efforts are made to verify that properties exist to avoid dereferencing errors
+     * that would crash the server.
+     *
+     */
+    if (!jsonMessage.hasOwnProperty("apiEndpoint")) {
+        console.log("No API endpoint specified")
+        return
+    }
+    console.log(jsonMessage)
+    if (jsonMessage.apiEndpoint != "login" && !socket.authenticated) {
+        console.log("Attempt to access API without a valid session established.")
+        socket.send(JSON.stringify({
+            server: "Not Authenticated"
+        }))
+        return
+    }
+
+    switch (jsonMessage.apiEndpoint) {
+        case "login":
+            if (!jsonMessage.hasOwnProperty("parameters")) {
+                console.log("Parameters are missing")
+                socket.send(JSON.stringify({
+                    server: "Invalid Parameters"
+                }))
+                return
+            }
+            login(socket, jsonMessage.parameters.username, jsonMessage.parameters.password)
+            break
+    }
+
 }
 
-function authorized(req)
-{
-  return valid_sessions.includes(req.query['auth'])
+function login(ws, username, password) {
+  if(username == "admin" && password == "Password"){
+    ws.authenticated = true
+    ws.send(JSON.stringify({
+        apiEndpoint: 'login',
+        result: true
+    }))
+  } else {
+    console.log("Failed logon for User: " + username + " with password >" + password + "< (wrong password)")
+    ws.send(JSON.stringify({
+        apiEndpoint: 'login',
+        result: false
+    }))
+  }
 }
-
-app.use(bodyParser.json()); // support json encoded bodies
- 
-// some data for the API
-var foods = [
-  "Donuts",
-  "Tacos"
-];
- 
-app.post('/api/login', function(req, res) {
-  if(req.body.username == username && req.body.password == password) {
-    var sessionID = genSessionID(32);
-    res.send({"authToken":sessionID});
-    valid_sessions.push(sessionID);
-    return
-  }
-res.send({"Authenticated":false});
-})
-
-
-app.get('/api/authenticated', function(req, res) {
-  if(authorized(req)){
-    res.send(true)
-    return
-  }
-  res.send(false)
-})
 
 app.get('/api/topTalkers', function(req, res) {
   var startTime = (new Date / 1000) - 3600;
@@ -163,19 +188,36 @@ app.get('/api/largestTransfers', function(req, res) {
 });
 
 app.use(express.static('dist'))
+app.use(express.static(__dirname));
 
-// the GET "foods" API endpoint
-app.get('/api/food', function (req, res) {
-  if(!authorized(req)){
-    res.send({"Not Authorized":''});
-    return
-  }
-    res.send(foods);
-});
-  
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+}); 
+
+
+app.use(bodyParser.json()); // support json encoded bodies
 // HTTP listener
-app.listen(3000, function () {
-    console.log('Silky is running.');
+const listenPort = 3000
+var server = app.listen(listenPort)
+const wss = new SocketServer({
+    server
 });
-module.exports = app;
+//init Websocket ws and handle incoming connect requests
+wss.on('connection', function connection(ws) {
+    console.log("Websocket Connection ...");
+    ws.on('message', (message => handleSocketData(ws, message)));
+    ws.send(JSON.stringify({
+        server: "Good morning, Dave."
+    }))
+    ws.on('close', (stuff => {
+        console.log("Socket reported a close")
+    }))
+    ws.on('error', (error => {
+        console.log("Socket reported an error.")
+    }))
+});
 
+
+module.exports = app;

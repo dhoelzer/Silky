@@ -18,17 +18,13 @@ export class LoginComponent implements OnInit {
   constructor(private userService: UserServiceService, private silk:SilkQueryService) { }
 
   ngOnInit() {
-    this.silk.checkAuthenticated().subscribe(result => {
+    this.userService.authenticated$.subscribe(result => {
       this.authed = <boolean>result
       this.authenticationNotice.emit(this.authed)
     })
   }
 
   onSubmit(event) {
-  	this.userService.attemptLogin(this.username, this.password).subscribe(data => {
-      this.silk.setAuthToken(data["authToken"])
-      if(data["authToken"]){ this.authed = true; }
-      this.authenticationNotice.emit(this.authed)
-  })
+  	this.userService.attemptLogin(this.username, this.password)
   }
 }
