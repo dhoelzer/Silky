@@ -210,6 +210,14 @@ function sendResults(endpoint, data)
     }
   }
 }
+
+setInterval(largestTransfers, (1000 * 60 * 5))
+setInterval(_10MinuteTCPPorts, (1000 * 60))
+setInterval(_60MinuteStats, (1000 * 60 * 15))
+setInterval(_24HourStats, (1000 * 60 * 60))
+setInterval(topTCPConnections, (1000 * 60 * 5))
+setInterval(topTalkers, (1000 * 60 * 5))
+
 app.use(express.static('dist'))
 app.use(express.static(__dirname));
 
@@ -219,19 +227,13 @@ app.use(function(req, res, next) {
   next();
 }); 
 
-setInterval(largestTransfers, (1000 * 60 * 5))
-setInterval(_10MinuteTCPPorts, (1000 * 60))
-setInterval(_60MinuteStats, (1000 * 60 * 15))
-setInterval(_24HourStats, (1000 * 60 * 60))
-setInterval(topTCPConnections, (1000 * 60 * 5))
-setInterval(topTalkers, (1000 * 60 * 5))
-
 app.use(bodyParser.json()); // support json encoded bodies
 // HTTP listener
 var listenPort = process.env.SILKY_PORT || 3000
 var server = app.listen(listenPort)
 const wss = new SocketServer({
-    server
+    server,
+    clientTracking: true
 });
 //init Websocket ws and handle incoming connect requests
 wss.on('connection', function connection(ws) {
