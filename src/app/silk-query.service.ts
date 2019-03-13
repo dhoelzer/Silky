@@ -40,7 +40,7 @@ export class SilkQueryService {
     this.serverMessage$.next("")
     if(isDevMode() == false) { 
       this.url = ''
-      this.ws = 'wss://'+window.location.hostname
+      this.ws = 'ws://'+window.location.hostname
     }
     else { 
       console.log("In development mode")
