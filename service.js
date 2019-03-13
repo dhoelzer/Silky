@@ -17,6 +17,7 @@ class Message {
 }
 
 const express = require('express');
+const fs = require('fs')
 const bodyParser = require('body-parser');
 const path = require('path');
 const SocketServer = require('ws').Server;
@@ -26,8 +27,6 @@ const https = require('https')
 const app = express();
 
 var child;
-const username = "admin";
-const password = "ChangeThisPassword!";
 
 function handleSocketData(socket, message) {
     var jsonMessage = Object
@@ -63,28 +62,48 @@ function handleSocketData(socket, message) {
 
     switch (jsonMessage.apiEndpoint) {
         case "login":
-            if (!jsonMessage.hasOwnProperty("parameters")) {
-                console.log("Parameters are missing")
-                socket.send(JSON.stringify({
-                    server: "Invalid Parameters"
-                }))
-                return
-            }
-            login(socket, jsonMessage.parameters.username, jsonMessage.parameters.password)
-            break
+          if (!jsonMessage.hasOwnProperty("parameters")) {
+              console.log("Parameters are missing")
+              socket.send(JSON.stringify({
+                  server: "Invalid Parameters"
+              }))
+              return
+          }
+          login(socket, jsonMessage.parameters.username, jsonMessage.parameters.password)
+          break
+        case "toptalkers":
+          topTalkers(socket)
+          break
     }
 
 }
 
 function login(ws, username, password) {
-  if(username == "admin" && password == "Password"){
+
+  // This is a VERY SIMPLE authentication system.  I'm not interested in backing this with a databse
+  // at the moment.  The format of the passwd file is:
+
+  // username:password:
+  
+  // Note the trailing colon!  Without it, the password will have a comma appended by our splits.
+
+  var entries = fs.readFileSync('passwd').toString().split("\n")
+  var passwdEntries = Object
+  for(entry in entries){
+    var[user, passwd] = entries.toString().split(':')
+    console.log(user)
+    console.log(passwd)
+    passwdEntries[user]=passwd
+  }
+  console.log(passwdEntries)
+  if(passwdEntries[username.toString()] == password.toString()){
     ws.authenticated = true
     ws.send(JSON.stringify({
         apiEndpoint: 'login',
         result: true
     }))
   } else {
-    console.log("Failed logon for User: " + username + " with password >" + password + "< (wrong password)")
+    console.log("Failed logon attempt: " + username + " with password >" + password + "< (wrong password)")
     ws.send(JSON.stringify({
         apiEndpoint: 'login',
         result: false
@@ -92,27 +111,22 @@ function login(ws, username, password) {
   }
 }
 
-app.get('/api/topTalkers', function(req, res) {
+function topTalkers(ws)
+{
   var startTime = (new Date / 1000) - 3600;
   var topTenCommand = "rwfilter --type all --proto=0-255 --start-date="+startTime+" --pass=stdout | rwstats --count 10 --fields sip,proto --no-titles --delimited=, --values=packets --top --no-columns --no-final-delimiter | awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"source\\\":\\\"\"$1\"\\\", \\\"protocol\\\":\"$2\", \\\"packets\\\":\"$3\", \\\"_percent\\\":\"$4\", \\\"_tally\\\":\"$5\"}\";separator=\",\"}END{print \"]\";}'";
 
-  if(!authorized(req)){
-    res.send({"Not Authorized":''});
-    return
-  }
   child = exec(topTenCommand, function(error, stdout, stderr) {
-    res.send(stdout)
+    ws.send(JSON.stringify({
+      apiEndpoint:'toptalkers', result: stdout
+    }))
   })
-});
+}
 
 app.get('/api/topTCPConnections', function(req, res) {
   var startTime = (new Date / 1000) - 3600;
   var topTenCommand = "rwfilter --type=all --flags-initial=S/SA --proto=6 --start-date="+startTime+" --pass=stdout | rwstats --count 10 --fields sip  --no-titles --delimited=, --values=packets --top --no-columns --no-final-delimiter | awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"source\\\":\\\"\"$1\"\\\", \\\"connections\\\":\"$2\", \\\"_percent\\\":\"$3\", \\\"_tally\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'";
 
-  if(!authorized(req)){
-    res.send({"Not Authorized":''});
-  return
-  }
   child = exec(topTenCommand, function(error, stdout, stderr) {
     res.send(stdout)
   })
@@ -123,10 +137,6 @@ app.get('/api/30DayStats', function(req, res) {
   var endTime = new Date / 1000;
   var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=6 --pass=stdout | rwcount --bin-size=86400 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
-  if(!authorized(req)){
-    res.send({"Not Authorized":''});
-    return
-  }
   child = exec(commandString, function(error, stdout, stderr) {
     res.send(stdout);
   })
@@ -137,10 +147,6 @@ app.get('/api/24HourStats', function(req, res) {
   var endTime = new Date / 1000;
   var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=6 --pass=stdout | rwcount --bin-size=1800 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
-  if(!authorized(req)){
-    res.send({"Not Authorized":''});
-    return
-  }
   child = exec(commandString, function(error, stdout, stderr) {
     res.send(stdout);
   })
@@ -151,10 +157,6 @@ app.get('/api/60MinuteStats', function(req, res) {
   var endTime = Math.floor(new Date / 1000);
   var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=6 --pass=stdout | rwcount --bin-size=60 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
-  if(!authorized(req)){
-    res.send({"Not Authorized":''});
-    return
-  }
   child = exec(commandString, function(error, stdout, stderr) {
     res.send(stdout);
   })
@@ -165,10 +167,6 @@ app.get('/api/10MinuteTCPPorts', function(req, res) {
   var endTime = new Date / 1000;
   var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --flags-initial=S/SA --type=all --proto=6 --pass=stdout | rwstats --count 10 --fields dport --delimited=, --values=packets --top --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"port\\\":\\\"\"$1\"\\\", \\\"packets\\\":\"$2\", \\\"_percent\\\":\"$3\", \\\"_tally\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
-  if(!authorized(req)){
-    res.send({"Not Authorized":''});
-    return
-  }
   child = exec(commandString, function(error, stdout, stderr) {
     res.send(stdout);
   })
@@ -178,10 +176,6 @@ app.get('/api/largestTransfers', function(req, res) {
   var startTime = (new Date / 1000) - 3600;
   var largestTransfersCommand = "rwfilter --type all --proto=0-255 --start-date="+startTime+" --pass=stdout | rwstats --count 10 --fields sip,sport,dip,dport,bytes --no-titles --delimited=, --values=bytes --top --no-columns --no-final-delimiter | awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"source\\\":\\\"\"$1\"\\\", \\\"sport\\\":\"$2\", \\\"dest\\\":\\\"\"$3\"\\\", \\\"dport\\\":\"$4\", \\\"bytes\\\":\"$5\", \\\"_percent\\\":\"$6\", \\\"_tally\\\":\"$7\"}\";separator=\",\"}END{print \"]\";}'";
 
-  if(!authorized(req)){
-    res.send({"Not Authorized":''});
-    return
-  }
   child = exec(largestTransfersCommand, function(error, stdout, stderr) {
     res.send(stdout)
   })

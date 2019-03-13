@@ -27,7 +27,7 @@ export class TopTalkersComponent implements OnInit {
   }
 
   getTopTalkers() {
-    this._silk.topTalkers().subscribe(
+    this._silk.topTalkers$.subscribe(
       data => {
         this.topTalkers = data;
         Chart.defaults.global.defaultFontColor = 'white';
@@ -39,7 +39,7 @@ export class TopTalkersComponent implements OnInit {
       err => console.error(err),
       () => console.log('Processed talkers')
       );
-    
+    this._silk.topTalkers()
   }
 
  newTopChart(hosts, packets) {

@@ -1,24 +1,78 @@
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
+import { isDevMode } from '@angular/core';
+import { Subject } from 'rxjs';
 
 import {timer as observableTimer, Observable} from 'rxjs';
 
 import {mergeMap} from 'rxjs/operators';
-// Copyright 2017, David Hoelzer/Enclave Forensics Corporation - All Rights Reserved
+// Copyright 2017, 2018, 2019 David Hoelzer/Enclave Forensics Corporation - All Rights Reserved
 // No portion of this code may be used in any commercial product without first notifying Enclave Forensics Corporation
 // and clear attribution and credit for portions copied or otherwise utilized.
 
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Statistics } from './models/Statistics';
+
+export class Message {
+    constructor(
+        public apiEndpoint: string,
+        public parameters: {},
+    ) { }
+}
 
 
 
 @Injectable()
 export class SilkQueryService {
-
+  private socket: WebSocketSubject<any>
+  authenticated$ = new Subject<boolean>()
+  serverMessage$ = new Subject<string>()
+  statusMessage$ = new Subject<string>()
+  topTalkers$ = new Subject<string>()
+  private ws: string
   private url = 'http://192.168.2.18:3000';
-  private authToken = "";
 
-  constructor(private http: HttpClient) { }
+  authToken = "Deprecated"
+
+  constructor(private http: HttpClient) {
+    this.authenticated$.next(false)
+    this.serverMessage$.next("")
+    if(isDevMode() == false) { 
+      this.url = ''
+      this.ws = 'wss://'+window.location.hostname
+    }
+    else { 
+      console.log("In development mode")
+      this.url = "http://127.0.0.1:3000"
+      this.ws = "ws://127.0.0.1:3000"
+    }
+    this.socket = webSocket(this.ws)
+  this.socket.subscribe(message => this.socketMessage(message))
+  }
+
+  socketMessage(message)
+  {
+    var messageObject = message
+    if(messageObject.hasOwnProperty("message")){
+      this.statusMessage$.next(messageObject.message)
+    }
+    switch(messageObject.apiEndpoint)
+    {
+      case 'login':
+        this.authenticated$.next(messageObject.result as boolean)
+        break
+      case 'toptalkers':
+        this.topTalkers$.next(messageObject.result as string)
+        break
+    }
+  }
+
+  attemptLogin(username, password)
+  {
+    var message = new Message("login", {"username":username, "password":password})
+    this.socket.next(message)
+  }
 
   runQuery() {
   	console.log("Running query");
@@ -43,18 +97,6 @@ export class SilkQueryService {
   setAuthToken(token)
   {
     console.log("Token: "+token)
-    this.authToken = token
-  }
-
-  attemptLogin(username, password)
-  {
-    var result = <any>[]
-    var request = this.http.post(this.url+'/api/login', {"username": username, "password": password}).subscribe(data => {
-      this.setAuthToken(data["authToken"])
-      console.log(this.authToken)
-      return true
-    })
-    return false
   }
 
   checkAuthenticated()
@@ -79,7 +121,8 @@ export class SilkQueryService {
   }
 
   topTalkers() {
-  	return observableTimer(0,600000).pipe(mergeMap((i) => this.http.get(this.url + '/api/topTalkers?auth='+this.authToken)));
+    var message = new Message("toptalkers",{})
+    this.socket.next(message)
   }
 
   largestTransfers() {

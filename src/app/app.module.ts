@@ -17,7 +17,6 @@ import { TopTCPPortsComponent } from './displays/topTCPPorts.component';
 
 import { LargeTransfer } from './models/largeTransfer';
 import { LoginComponent } from './login/login.component';
-import { UserServiceService } from './user-service.service';
 
 @NgModule({
   declarations: [
@@ -34,7 +33,7 @@ import { UserServiceService } from './user-service.service';
     BrowserModule,
     FormsModule
   ],
-  providers: [SilkQueryService, UserServiceService],
+  providers: [SilkQueryService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
