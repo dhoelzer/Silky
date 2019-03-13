@@ -197,7 +197,7 @@ function _10MinuteTCPPorts(ws)
 
   child = exec(commandString, function(error, stdout, stderr) {
     ws.send(JSON.stringify({
-      apiEndpoint: '10MinuteTCPPorts', result: stdout
+      apiEndpoint: 'topTCPPorts', result: stdout
     }))
   })
 }
