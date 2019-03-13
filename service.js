@@ -132,9 +132,7 @@ function topTalkers(ws)
   var topTenCommand = "rwfilter --type all --proto=0-255  --pass=stdout | rwstats --count 10 --fields sip,proto --no-titles --delimited=, --values=packets --top --no-columns --no-final-delimiter | awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"source\\\":\\\"\"$1\"\\\", \\\"protocol\\\":\\\"\"$2\"\\\", \\\"packets\\\":\\\"\"$3\"\\\", \\\"_percent\\\":\\\"\"$4\"\\\", \\\"_tally\\\":\\\"\"$5\"\\\"}\";separator=\",\"}END{print \"]\";}'";
 
   child = exec(topTenCommand, function(error, stdout, stderr) {
-    ws.send(JSON.stringify({
-      apiEndpoint:'toptalkers', result: stdout
-    }))
+    sendResults(ws, 'toptalkers', stdout)
   })
 }
 
@@ -144,9 +142,7 @@ function topTCPConnections(ws)
   var topTenCommand = "rwfilter --type=all --flags-initial=S/SA --proto=6 --start-date="+startTime+" --pass=stdout | rwstats --count 10 --fields sip  --no-titles --delimited=, --values=packets --top --no-columns --no-final-delimiter | awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"source\\\":\\\"\"$1\"\\\", \\\"connections\\\":\"$2\", \\\"_percent\\\":\"$3\", \\\"_tally\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'";
 
   child = exec(topTenCommand, function(error, stdout, stderr) {
-    ws.send(JSON.stringify({
-      apiEndpoint:'topTCPConnections', result: stdout
-    }))
+    sendResults(ws, 'topTCPConnections', stdout)
   })
 }
 
@@ -157,9 +153,7 @@ function _30DayStats(ws)
   var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=6 --pass=stdout | rwcount --bin-size=86400 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
   child = exec(commandString, function(error, stdout, stderr) {
-    ws.send(JSON.stringify({
-      apiEndpoint:'30DayStats', result: stdout
-    }))
+    sendResults(ws, '30DayStats', stdout)
   })
 }
 
@@ -170,9 +164,7 @@ function _24HourStats(ws)
   var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=6 --pass=stdout | rwcount --bin-size=1800 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
   child = exec(commandString, function(error, stdout, stderr) {
-    ws.send(JSON.stringify({
-      apiEndpoint: '24HourStats', result: stdout
-    }))
+    sendResults(ws, '24HourStats', stdout)
   })
 }
 
@@ -183,9 +175,7 @@ function _60MinuteStats(ws)
   var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=6 --pass=stdout | rwcount --bin-size=60 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
   child = exec(commandString, function(error, stdout, stderr) {
-    ws.send(JSON.stringify({
-      apiEndpoint: '60MinuteStats', result: stdout
-    }))
+    sendResults(ws, '60MinuteStats', stdout)
   })
 }
 
@@ -196,9 +186,7 @@ function _10MinuteTCPPorts(ws)
   var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --flags-initial=S/SA --type=all --proto=6 --pass=stdout | rwstats --count 10 --fields dport --delimited=, --values=packets --top --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"port\\\":\\\"\"$1\"\\\", \\\"packets\\\":\"$2\", \\\"_percent\\\":\"$3\", \\\"_tally\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
   child = exec(commandString, function(error, stdout, stderr) {
-    ws.send(JSON.stringify({
-      apiEndpoint: 'topTCPPorts', result: stdout
-    }))
+    sendResults(ws, 'topTCPPorts', stdout)
   })
 }
 
@@ -208,12 +196,24 @@ function largestTransfers(ws)
   var largestTransfersCommand = "rwfilter --type all --proto=0-255 --start-date="+startTime+" --pass=stdout | rwstats --count 10 --fields sip,sport,dip,dport,bytes --no-titles --delimited=, --values=bytes --top --no-columns --no-final-delimiter | awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"source\\\":\\\"\"$1\"\\\", \\\"sport\\\":\"$2\", \\\"dest\\\":\\\"\"$3\"\\\", \\\"dport\\\":\"$4\", \\\"bytes\\\":\"$5\", \\\"_percent\\\":\"$6\", \\\"_tally\\\":\"$7\"}\";separator=\",\"}END{print \"]\";}'";
 
   child = exec(largestTransfersCommand, function(error, stdout, stderr) {
-    ws.send(JSON.stringify({
-      apiEndpoint: 'largestTransfers', result: stdout
-    }))
+    sendResults(ws, largestTransfers, stdout)
   })
 }
 
+function sendResults(ws, endpoint, data)
+{
+  const message = JSON.stringify({ apiEndpoint: endpoint, result: data})
+  if(ws) {
+    ws.send(message)
+  } else {
+    for(ws of wss.clients())
+    {
+      if(ws.authenticated) {
+        ws.send(message)
+      }
+    }
+  }
+}
 app.use(express.static('dist'))
 app.use(express.static(__dirname));
 
@@ -223,6 +223,12 @@ app.use(function(req, res, next) {
   next();
 }); 
 
+setInterval(largestTransfers, (1000 * 60 * 5))
+setInterval(_10MinuteTCPPorts, (1000 * 60))
+setInterval(_60MinuteStats, (1000 * 60 * 15))
+setInterval(_24HourStats, (1000 * 60 * 60))
+setInterval(topTCPConnections, (1000 * 60 * 5))
+setInterval(topTalkers, (1000 * 60 * 5))
 
 app.use(bodyParser.json()); // support json encoded bodies
 // HTTP listener
