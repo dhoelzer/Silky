@@ -76,6 +76,22 @@ function handleSocketData(socket, message) {
         case "topTCPConnections":
           topTCPConnections(socket)
           break
+        case "largestTransfers":
+          largestTransfers(socket)
+          break
+        case "topTCPPorts":
+          topTCPConnections(socket)
+          break
+        case "30DayStats":
+          _30DayStats(socket)
+          break
+        case "60MinuteStats":
+          _60MinuteStats(socket)
+          break
+        case "24HourStats":
+          _24HourStats(socket)
+          break
+
     }
 
 }
