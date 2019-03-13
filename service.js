@@ -80,7 +80,7 @@ function handleSocketData(socket, message) {
           largestTransfers(socket)
           break
         case "topTCPPorts":
-          topTCPConnections(socket)
+          _10MinuteTCPPorts(socket)
           break
         case "30DayStats":
           _30DayStats(socket)
