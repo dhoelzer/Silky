@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  onSubmit(event) {
+  onSubmit() {
   	this.silk.attemptLogin(this.username, this.password)
   }
 }
