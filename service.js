@@ -114,7 +114,7 @@ function login(ws, username, password) {
 function topTalkers(ws)
 {
   var startTime = (new Date / 1000) - 3600;
-  var topTenCommand = "rwfilter --type all --proto=0-255  --pass=stdout | rwstats --count 10 --fields sip,proto --no-titles --delimited=, --values=packets --top --no-columns --no-final-delimiter | awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{'source':\"$1\", 'protocol':\"$2\", 'packets':\"$3\", '_percent:\"$4\", '_tally':\"$5\"}\";separator=\",\"}END{print \"]\";}'";
+  var topTenCommand = "rwfilter --type all --proto=0-255  --pass=stdout | rwstats --count 10 --fields sip,proto --no-titles --delimited=, --values=packets --top --no-columns --no-final-delimiter | awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{source:\"$1\", protocol:\"$2\", packets:\"$3\", _percent:\"$4\", _tally:\"$5\"}\";separator=\",\"}END{print \"]\";}'";
 
   console.log(topTenCommand)
   child = exec(topTenCommand, function(error, stdout, stderr) {
