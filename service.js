@@ -114,7 +114,7 @@ function login(ws, username, password) {
 function topTalkers(ws)
 {
   var startTime = (new Date / 1000) - 3600;
-  var topTenCommand = "rwfilter --type all --proto=0-255  --pass=stdout | rwstats --count 10 --fields sip,proto --no-titles --delimited=, --values=packets --top --no-columns --no-final-delimiter | awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{source:\"$1\", protocol:\"$2\", packets:\"$3\", _percent:\"$4\", _tally:\"$5\"}\";separator=\",\"}END{print \"]\";}'";
+  var topTenCommand = "rwfilter --type all --proto=0-255  --pass=stdout | rwstats --count 10 --fields sip,proto --no-titles --delimited=, --values=packets --top --no-columns --no-final-delimiter | awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\'source\':\"$1\", \'protocol\':\"$2\", \'packets\':\"$3\", \'_percent\':\"$4\", \'_tally\':\"$5\"}\";separator=\",\"}END{print \"]\";}'";
 
   console.log(topTenCommand)
   child = exec(topTenCommand, function(error, stdout, stderr) {
@@ -196,7 +196,7 @@ app.use(function(req, res, next) {
 
 app.use(bodyParser.json()); // support json encoded bodies
 // HTTP listener
-const listenPort = 3000
+var listenPort = process.env.SILKY_PORT || 3000
 var server = app.listen(listenPort)
 const wss = new SocketServer({
     server
