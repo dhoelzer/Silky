@@ -33,42 +33,43 @@ export class StatisticsComponent implements OnInit {
   }
 
   get24HourStats() {
-    this._silk.Stats24Hours().subscribe(
+    this._silk._24HourStats$.subscribe(
       data => {
-        this.stats24Hours = data;
+        this.stats24Hours = JSON.parse(data)
         if(this.stats24HourChart instanceof Chart) this.stats24HourChart.destroy()
         this.stats24HourChart = this.newStatsChart(this.stats24Hours, "24HourStatsChart", "Bytes Over 24 Hours")
-      
       },
       err => console.error(err),
       () => console.log("24 hour stats")
     )
+    this._silk.Stats24Hours()
 
   }
 
   get30DayStats() {
-    this._silk.Stats30Days().subscribe(
+    this._silk._30DayStats$.subscribe(
       data => {
-        this.stats30Days = data;
+        this.stats30Days = JSON.parse(data)
         if(this.stats30DayChart instanceof Chart) this.stats30DayChart.destroy()
         this.stats30DayChart = this.newStatsChart(this.stats30Days, "30DayStats", "Bytes Over 30 Days")
       },
       err => console.error(err),
       () => console.log("30 day stats")
       )
-
+    this._silk.Stats30Days()
   }
 
   get60MinuteStats() {
-    this._silk.Stats60Minutes().subscribe(
+    this._silk._60MinuteStats$.subscribe(
       data => {
-        this.stats60Minutes = data;
+        this.stats60Minutes = JSON.parse(data)
         if(this.stats60MinutesChart instanceof Chart) this.stats60MinutesChart.destroy()
         this.stats60MinutesChart = this.newStatsChart(this.stats60Minutes, "60MinuteStatsChart", "Bytes Over the Last Hour")
       },
       err => console.error(err),
       () => console.log("30 day stats")
       )
+    this._silk.Stats60Minutes()
 
   }
 

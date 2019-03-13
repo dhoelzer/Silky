@@ -27,9 +27,9 @@ export class TopTCPPortsComponent implements OnInit {
   }
 
   getTopPorts() {
-    this._silk.TopTCPPorts().subscribe(
+    this._silk.topTCPPorts$.subscribe(
       data => {
-        this.topPorts = data;
+        this.topPorts = JSON.parse(data)
         if(this.topPortsChart instanceof Chart) this.topPortsChart.destroy()
         this.topPortsChart = this.newStatsChart(this.topPorts, "topTCPPorts", "Top TCP Destination Ports")
       
@@ -37,6 +37,7 @@ export class TopTCPPortsComponent implements OnInit {
       err => console.error(err),
       () => console.log("Top TCP Ports")
     )
+    this._silk.TopTCPPorts()
 
   }
 

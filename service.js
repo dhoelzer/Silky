@@ -39,7 +39,7 @@ function handleSocketData(socket, message) {
         }))
         return
     }
-    console.log("Message: " + message)
+    console.log("Inbound Message: " + message)
     /*
      *
      * We cannot be certain that the socket message hasn't been tampered with or forged.  As a result,
@@ -51,7 +51,6 @@ function handleSocketData(socket, message) {
         console.log("No API endpoint specified")
         return
     }
-    console.log(jsonMessage)
     if (jsonMessage.apiEndpoint != "login" && !socket.authenticated) {
         console.log("Attempt to access API without a valid session established.")
         socket.send(JSON.stringify({
@@ -94,11 +93,8 @@ function login(ws, username, password) {
   var passwdEntries = Object
   for(entry in entries){
     var[user, passwd] = entries.toString().split(':')
-    console.log(user)
-    console.log(passwd)
     passwdEntries[user]=passwd
   }
-  console.log(passwdEntries)
   if(passwdEntries[username.toString()] == password.toString()){
     ws.authenticated = true
     ws.send(JSON.stringify({
@@ -119,10 +115,7 @@ function topTalkers(ws)
   var startTime = (new Date / 1000) - 3600;
   var topTenCommand = "rwfilter --type all --proto=0-255  --pass=stdout | rwstats --count 10 --fields sip,proto --no-titles --delimited=, --values=packets --top --no-columns --no-final-delimiter | awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"source\\\":\\\"\"$1\"\\\", \\\"protocol\\\":\\\"\"$2\"\\\", \\\"packets\\\":\\\"\"$3\"\\\", \\\"_percent\\\":\\\"\"$4\"\\\", \\\"_tally\\\":\\\"\"$5\"\\\"}\";separator=\",\"}END{print \"]\";}'";
 
-  console.log(topTenCommand)
   child = exec(topTenCommand, function(error, stdout, stderr) {
-    console.log(stdout)
-    console.log(stderr)
     ws.send(JSON.stringify({
       apiEndpoint:'toptalkers', result: stdout
     }))
@@ -141,54 +134,69 @@ function topTCPConnections(ws)
   })
 }
 
-app.get('/api/30DayStats', function(req, res) {
+function _30DayStats(ws)
+{
   var startTime = (new Date / 1000) - (86400*30);
   var endTime = new Date / 1000;
   var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=6 --pass=stdout | rwcount --bin-size=86400 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
   child = exec(commandString, function(error, stdout, stderr) {
-    res.send(stdout);
+    ws.send(JSON.stringify({
+      apiEndpoint:'30DayStats', result: stdout
+    }))
   })
-})
+}
 
-app.get('/api/24HourStats', function(req, res) {
+function _24HourStats(ws)
+{
   var startTime = (new Date / 1000) - (3600*24);
   var endTime = new Date / 1000;
   var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=6 --pass=stdout | rwcount --bin-size=1800 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
   child = exec(commandString, function(error, stdout, stderr) {
-    res.send(stdout);
+    ws.send(JSON.stringify({
+      apiEndpoint: '24HourStats', result: stdout
+    }))
   })
-})
+}
 
-app.get('/api/60MinuteStats', function(req, res) {
+function _60MinuteStats(ws)
+{
   var startTime = Math.floor((new Date / 1000) - (3600));
   var endTime = Math.floor(new Date / 1000);
   var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=6 --pass=stdout | rwcount --bin-size=60 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
   child = exec(commandString, function(error, stdout, stderr) {
-    res.send(stdout);
+    ws.send(JSON.stringify({
+      apiEndpoint: '60MinuteStats', result: stdout
+    }))
   })
-})
+}
 
-app.get('/api/10MinuteTCPPorts', function(req, res) {
+function _10MinuteTCPPorts(ws)
+{
   var startTime = (new Date / 1000) - (600);
   var endTime = new Date / 1000;
   var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --flags-initial=S/SA --type=all --proto=6 --pass=stdout | rwstats --count 10 --fields dport --delimited=, --values=packets --top --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"port\\\":\\\"\"$1\"\\\", \\\"packets\\\":\"$2\", \\\"_percent\\\":\"$3\", \\\"_tally\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
   child = exec(commandString, function(error, stdout, stderr) {
-    res.send(stdout);
+    ws.send(JSON.stringify({
+      apiEndpoint: '10MinuteTCPPorts', result: stdout
+    }))
   })
-})
+}
 
-app.get('/api/largestTransfers', function(req, res) {
+function largestTransfers(ws)
+{
   var startTime = (new Date / 1000) - 3600;
   var largestTransfersCommand = "rwfilter --type all --proto=0-255 --start-date="+startTime+" --pass=stdout | rwstats --count 10 --fields sip,sport,dip,dport,bytes --no-titles --delimited=, --values=bytes --top --no-columns --no-final-delimiter | awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"source\\\":\\\"\"$1\"\\\", \\\"sport\\\":\"$2\", \\\"dest\\\":\\\"\"$3\"\\\", \\\"dport\\\":\"$4\", \\\"bytes\\\":\"$5\", \\\"_percent\\\":\"$6\", \\\"_tally\\\":\"$7\"}\";separator=\",\"}END{print \"]\";}'";
 
   child = exec(largestTransfersCommand, function(error, stdout, stderr) {
-    res.send(stdout)
+    ws.send(JSON.stringify({
+      apiEndpoint: 'largestTransfers', result: stdout
+    }))
   })
-});
+}
 
 app.use(express.static('dist'))
 app.use(express.static(__dirname));

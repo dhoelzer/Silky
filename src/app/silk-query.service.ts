@@ -31,6 +31,11 @@ export class SilkQueryService {
   statusMessage$ = new Subject<string>()
   topTalkers$ = new Subject<string>()
   topTCPConnections$ = new Subject<string>()
+  topTCPPorts$ = new Subject<string>()
+  _30DayStats$ = new Subject<string>()
+  _24HourStats$ = new Subject<string>()
+  _60MinuteStats$ = new Subject<string>()
+  largestTransfers$ = new Subject<string>()
   private ws: string
   private url = '';
 
@@ -69,6 +74,21 @@ export class SilkQueryService {
       case 'topTCPConnections':
         this.topTCPConnections$.next(messageObject.result as string)
         break
+      case 'topTCPPorts':
+        this.topTCPPorts$.next(messageObject.result as string)
+        break
+      case '30DayStats':
+        this._30DayStats$.next(messageObject.result as string)
+        break
+      case '24HourStats':
+        this._24HourStats$.next(messageObject.result as string)
+        break
+      case '60MinuteStats':
+        this._60MinuteStats$.next(messageObject.result as string)
+        break
+      case 'largestTransfers':
+        this.largestTransfers$.next(messageObject.result as string)
+        break
     }
   }
 
@@ -93,35 +113,24 @@ export class SilkQueryService {
     // a network monitor open in Chrome to make sure you're not just seeing a stream of 304 messages, which is
     // really wasteful resources-wise.
 
-  getAuthToken()
-  {
-    return this.getAuthToken
-  }
-
-  setAuthToken(token)
-  {
-    console.log("Token: "+token)
-  }
-
-  checkAuthenticated()
-  {
-    return this.http.get(this.url + '/api/authenticated?auth='+this.authToken);
-  }
-
   TopTCPPorts()
   {
-    return observableTimer(0,60000).pipe(mergeMap((i) =>this.http.get(this.url + '/api/10MinuteTCPPorts?auth='+this.authToken)));
+    var message = new Message("topTCPPorts", {})
+    this.socket.next(message)
   }
   Stats30Days() {
-    return observableTimer(0,3600000).pipe(mergeMap((i) =>this.http.get(this.url + '/api/30DayStats?auth='+this.authToken)));
+    var message = new Message("30DayStats", {})
+    this.socket.next(message)
   }
 
   Stats24Hours() {
-    return observableTimer(0,360000).pipe(mergeMap((i) =>this.http.get(this.url + '/api/24HourStats?auth='+this.authToken)));
+    var message = new Message("24HourStats", {})
+    this.socket.next(message)
   }
 
   Stats60Minutes() {
-    return observableTimer(0,60000).pipe(mergeMap((i) =>this.http.get(this.url + '/api/60MinuteStats?auth='+this.authToken)));
+    var message = new Message("60MinuteStats", {})
+    this.socket.next(message)
   }
 
   topTalkers() {
@@ -130,7 +139,8 @@ export class SilkQueryService {
   }
 
   largestTransfers() {
-  	return observableTimer(0,600000).pipe(mergeMap((i) => this.http.get(this.url + '/api/largestTransfers?auth='+this.authToken)));
+    var message = new Message("largestTransfers", {})
+    this.socket.next(message)
   }
 
   topTCPConnections() {

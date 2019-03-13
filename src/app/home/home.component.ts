@@ -58,7 +58,6 @@ export class HomeComponent implements OnInit {
 
 
   getTopTCPConnections() {
-    this._silk.topTCPConnections()
     this._silk.topTCPConnections$.subscribe(
       data => {
         this.topTCPConnections = JSON.parse(data);
@@ -69,13 +68,14 @@ export class HomeComponent implements OnInit {
         this.topTCPConnectionsChart = this.newTopTCPConnectionsChart(hosts,connections);
       },
       err => console.error(err),
-      () => console.log("TCP Connections"));
+      () => console.log("TCP Connections"))
+    this._silk.topTCPConnections()
   }
  
   getLargestTransfers() {
-  	this._silk.largestTransfers().subscribe(
+  	this._silk.largestTransfers$.subscribe(
   		data => {
-  			this.largestTransfers = data;
+  			this.largestTransfers = JSON.parse(data)
         Chart.defaults.global.defaultFontColor = 'white';
         let bytes = this.largestTransfers.map(res => res.bytes)
         let hosts = this.largestTransfers.map(res => res.source+":"+res.sport+" -> "+res.dest+":"+res.dport)
@@ -83,7 +83,8 @@ export class HomeComponent implements OnInit {
         this.topTransfersChart = this.newTopTransfersChart(hosts, bytes)
   		},
   		err => console.error(err),
-  		() => console.log("transfers"));
+  		() => console.log("transfers"))
+    this._silk.largestTransfers()
   }
 
 //
