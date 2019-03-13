@@ -29,10 +29,10 @@ export class TopTalkersComponent implements OnInit {
   getTopTalkers() {
     this._silk.topTalkers$.subscribe(
       data => {
-        this.topTalkers = data;
+        this.topTalkers = JSON.parse(data);
         Chart.defaults.global.defaultFontColor = 'white';
-        let packets = this.topTalkers.map(res => res.packets)
-        let hosts = this.topTalkers.map(res => res.source)
+        let packets = this.topTalkers.packets
+        let hosts = this.topTalkers.source
         if(this.topChart instanceof Chart) this.topChart.destroy()
         this.topChart = this.newTopChart(hosts, packets)
       },
