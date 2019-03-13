@@ -58,9 +58,10 @@ export class HomeComponent implements OnInit {
 
 
   getTopTCPConnections() {
-    this._silk.topConnections().subscribe(
+    this._silk.topTCPConnections()
+    this._silk.topTCPConnections$.subscribe(
       data => {
-        this.topTCPConnections = data;
+        this.topTCPConnections = JSON.parse(data);
         Chart.defaults.global.defaultFontColor = 'white';
         let connections = this.topTCPConnections.map(res => res.connections);
         let hosts = this.topTCPConnections.map(res => res.source);

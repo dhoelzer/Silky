@@ -74,6 +74,9 @@ function handleSocketData(socket, message) {
         case "toptalkers":
           topTalkers(socket)
           break
+        case "topTCPConnections":
+          topTCPConnections(socket)
+          break
     }
 
 }
@@ -126,14 +129,17 @@ function topTalkers(ws)
   })
 }
 
-app.get('/api/topTCPConnections', function(req, res) {
+function topTCPConnections(ws)
+{
   var startTime = (new Date / 1000) - 3600;
   var topTenCommand = "rwfilter --type=all --flags-initial=S/SA --proto=6 --start-date="+startTime+" --pass=stdout | rwstats --count 10 --fields sip  --no-titles --delimited=, --values=packets --top --no-columns --no-final-delimiter | awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"source\\\":\\\"\"$1\"\\\", \\\"connections\\\":\"$2\", \\\"_percent\\\":\"$3\", \\\"_tally\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'";
 
   child = exec(topTenCommand, function(error, stdout, stderr) {
-    res.send(stdout)
+    ws.send(JSON.stringify({
+      apiEndpoint:'topTCPConnections', result: stdout
+    }))
   })
-});
+}
 
 app.get('/api/30DayStats', function(req, res) {
   var startTime = (new Date / 1000) - (86400*30);

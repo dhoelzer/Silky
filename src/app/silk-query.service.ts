@@ -30,6 +30,7 @@ export class SilkQueryService {
   serverMessage$ = new Subject<string>()
   statusMessage$ = new Subject<string>()
   topTalkers$ = new Subject<string>()
+  topTCPConnections$ = new Subject<string>()
   private ws: string
   private url = '';
 
@@ -64,6 +65,9 @@ export class SilkQueryService {
         break
       case 'toptalkers':
         this.topTalkers$.next(messageObject.result as string)
+        break
+      case 'topTCPConnections':
+        this.topTCPConnections$.next(messageObject.result as string)
         break
     }
   }
@@ -129,7 +133,8 @@ export class SilkQueryService {
   	return observableTimer(0,600000).pipe(mergeMap((i) => this.http.get(this.url + '/api/largestTransfers?auth='+this.authToken)));
   }
 
-  topConnections() {
-    return observableTimer(0,300000).pipe(mergeMap((i) => this.http.get(this.url + '/api/topTCPConnections?auth='+this.authToken)));
+  topTCPConnections() {
+    var message = new Message("topTCPConnections", {})
+    this.socket.next(message)
   }
 }
