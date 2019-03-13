@@ -31,7 +31,7 @@ export class SilkQueryService {
   statusMessage$ = new Subject<string>()
   topTalkers$ = new Subject<string>()
   private ws: string
-  private url = 'http://192.168.2.18:3000';
+  private url = '';
 
   authToken = "Deprecated"
 
