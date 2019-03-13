@@ -203,7 +203,7 @@ function largestTransfers()
 function sendResults(endpoint, data)
 {
   const message = JSON.stringify({ apiEndpoint: endpoint, result: data})
-  for(ws of wss.clients())
+  for(ws in wss.clients())
   {
     if(ws.authenticated) {
       ws.send(message)
