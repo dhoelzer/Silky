@@ -18,8 +18,8 @@
 .searchField0 {
 	padding: 1px;
 	margin: 0px;
-	min-width: 5em;
-	max-width: 5em;
+	min-width: 7em;
+	max-width: 7em;
 	background: #2885c4;
 	border:1px solid darkgrey;
 	overflow: hidden;
@@ -28,8 +28,8 @@
 .searchField1 {
 	padding: 1px;
 	margin: 0px;
-	min-width: 5em;
-	max-width: 5em;
+	min-width: 7em;
+	max-width: 7em;
 	background: #57b3f1;
 	border:1px solid darkgrey;
 	overflow: hidden;
@@ -46,8 +46,8 @@
 	background:#2885c4;
 	padding: 1px;
 	margin:0;
-	min-width: 5em;
-	max-width: 5em;
+	min-width: 7em;
+	max-width: 7em;
 	border:1px solid darkgrey;
 	overflow:hidden;
 }
