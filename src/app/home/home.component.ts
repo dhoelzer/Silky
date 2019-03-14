@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
   proto: string="0-255";
   flags: string="SFRPAUCE/SFRPAUCE"
   flagsInitial: string="SFRPAUCE/SFRPAUCE"
-  sensors: string="all"
+  sensors: string="0-"
   trafficTypes: string="all"
 
   
