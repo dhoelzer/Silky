@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit {
       flags: this.flags,
       flagsInitial: this.flagsInitial,
       sensors: this.sensors,
-      trafficType: this.trafficType
+      trafficTypes: this.trafficTypes
     })
     this.matchingRows = this.results.length;
   }  
