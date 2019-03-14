@@ -124,8 +124,8 @@ function runQuery(socket, parameters)
   rwFilter += " --sport="+sport
   rwFilter += " --dport="+dport
   rwFilter += " --proto="+proto
-  rwFilter += " --flags="+flags
-  rwFilter += " --flagsInitial="+flagsInitial
+  rwFilter += " --flags-all="+flags
+  rwFilter += " --flags-initial="+flagsInitial
 
   if(sensors == "all") { } else { rwFilter += " --sensors="+sensors }
   rwFilter += " --type="+trafficTypes
