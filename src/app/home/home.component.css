@@ -9,6 +9,14 @@
 
 }
 
+div .heading {
+	float:left;
+	padding: 2em;
+	background:#2885c4;
+	border:left;
+	border-style: solid;
+	border-color: white;
+}
 .transfers-container {
 	display: grid;
 	grid-template-columns: repeat(6, auto);
