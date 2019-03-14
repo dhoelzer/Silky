@@ -21,23 +21,21 @@
 .searchField1 {
 	padding: 1px;
 	margin: 0px;
-	min-width: 7em;
-	max-width: 7em;
+	min-width: 9em;
+	max-width: 9em;
 	background: #2885c4;
 	border:1px solid darkgrey;
-	overflow-y: hidden;
-	overflow-x: scroll;
+	overflow: hidden;
 }
 
 .searchField0 {
 	padding: 1px;
 	margin: 0px;
-	min-width: 8em;
-	max-width: 8em;
+	min-width: 9em;
+	max-width: 9em;
 	background: #57b3f1;
 	border:1px solid darkgrey;
-	overflow-y: hidden;
-	overflow-x: scroll;
+	overflow: hidden;
 }
 
 .searchHeadings {
@@ -49,11 +47,12 @@
 .heading {
 	font-size:90%;
 	font-family:monospace;	
+	text-align: center;
 	background:#2885c4;
 	padding: 1px;
 	margin:0;
-	min-width: 8em;
-	max-width: 8em;
+	min-width: 9em;
+	max-width: 9em;
 	border:1px solid darkgrey;
 	overflow:hidden;
 }

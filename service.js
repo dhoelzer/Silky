@@ -108,6 +108,7 @@ function handleSocketData(socket, message) {
 function runQuery(socket, parameters)
 {
   rwFilter = "rwfilter"
+  const fieldsToReturn = "sTime,eTime,duration,sip,sport,dip,dport,protocol,packets,bytes,initialFlags,sessionFlags,sensor"
   saddress = parameters.saddress
   daddress = parameters.daddress
   sport = parameters.sport
@@ -130,7 +131,7 @@ function runQuery(socket, parameters)
   if(sensors == "all") { } else { rwFilter += " --sensors="+sensors }
   rwFilter += " --type="+trafficTypes
 
-  rwFilter += " --pass=stdout | rwcut --all-fields --num-recs=100 --delimited=, "
+  rwFilter += " --pass=stdout | rwcut --fields="+fieldsToReturn+" --num-recs=100 --delimited=, "
 
   console.log(rwFilter)
   child = exec(rwFilter, function(error, stdout, stderr) {
