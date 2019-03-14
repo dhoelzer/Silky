@@ -128,7 +128,7 @@ function runQuery(socket, parameters)
     rwFilter += " --flags="+flags
     rwFilter += " --flagsInitial="+flagsInitial
   }
-  rwFilter += " --sensors="+sensors
+  if(sensors == "all") { } else { rwFilter += " --sensors="+sensors }
   rwFilter += " --type="+trafficTypes
 
   rwFilter += " --pass=stdout | rwcut --all-fields --num-recs=100 --delimited=, "
