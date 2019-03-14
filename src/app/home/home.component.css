@@ -15,7 +15,7 @@
 	flex-direction: row;
 }
 
-.searchField0 {
+.searchField1 {
 	padding: 1px;
 	margin: 0px;
 	min-width: 7em;
@@ -25,7 +25,7 @@
 	overflow: hidden;
 }
 
-.searchField1 {
+.searchField0 {
 	padding: 1px;
 	margin: 0px;
 	min-width: 7em;
