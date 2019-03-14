@@ -16,15 +16,22 @@
 }
 
 .searchField {
-	padding: 2px;
+	padding: 1px;
+	margin: 0;
+	width: 15em;
 	background: #57b3f1;
 	border:left;
 	border-style: solid;
 	border-color: white;
+	overflow: hidden;
 }
 
 .searchHeadings {
 	display: flex;
+	padding: 1px;
+	margin:0;
+	overflow:hidden;
+	width: 15em;
 	flex-wrap: nowrap;
 	flex-direction: row;
 }
