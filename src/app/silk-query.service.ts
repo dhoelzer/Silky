@@ -102,7 +102,6 @@ export class SilkQueryService {
   }
 
   runQuery(jsonQueryString) {
-  	console.log("Running query: "+jsonQueryString);
   	var message = new Message("runQuery", jsonQueryString)
     this.socket.next(message)
   }
