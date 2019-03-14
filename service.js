@@ -91,8 +91,52 @@ function handleSocketData(socket, message) {
         case "24HourStats":
           _24HourStats(socket)
           break
-
+        case "runQuery":
+          if (!jsonMessage.hasOwnProperty("parameters")) {
+              console.log("Parameters are missing")
+              socket.send(JSON.stringify({
+                  server: "Invalid Parameters"
+              }))
+              return
+          }
+          runQuery(socket, jsonMessage.parameters)
+          break
     }
+
+}
+
+function runQuery(socket, parameters)
+{
+  rwFilter = "rwfilter"
+  saddress = parameters.saddress
+  daddress = parameters.daddress
+  sport = parameters.sport
+  dport = parameters.dport
+  startDate = parameters.startDate
+  endDate = parameters.endDate
+  proto = parameters.proto
+  flags = parameters.flags
+  flagsInitial = parameters.flagsInitial
+  sensors = parameters.sensors
+  trafficTypes = parameters.trafficTypes
+  rwFilter += " --saddress="+saddress
+  rwFilter += " --daddress="+daddress
+  rwFilter += " --sport="+sport
+  rwFilter += " --dport="+dport
+  rwFilter += " --proto="+proto
+  if(proto == "6"){
+    rwFilter += " --flags="+flags
+    rwFilter += " --flagsInitial="+flagsInitial
+  }
+  rwFilter += " --sensors="+sensors
+  rwFilter += " --type="+trafficTypes
+
+  rwFilter += " --pass=stdout | rwcut --all-fields --num-recs=100 --delimited=, "
+
+  child = exec(rwFilter, function(error, stdout, stderr) {
+    sendResults('queryResults', stdout)
+    console.log(stderr)
+  })
 
 }
 

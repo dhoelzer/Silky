@@ -36,6 +36,7 @@ export class SilkQueryService {
   _24HourStats$ = new Subject<string>()
   _60MinuteStats$ = new Subject<string>()
   largestTransfers$ = new Subject<string>()
+  searchResults$ = new Subject<string>()
   private ws: string
   private url = '';
 
@@ -89,6 +90,8 @@ export class SilkQueryService {
       case 'largestTransfers':
         this.largestTransfers$.next(messageObject.result as string)
         break
+      case 'queryResults':
+        this.searchResults$.next(messageObject.result as string)
     }
   }
 
@@ -98,13 +101,10 @@ export class SilkQueryService {
     this.socket.next(message)
   }
 
-  runQuery() {
-  	console.log("Running query");
-  	var result = this.http.get(this.url + '/api/food')
-
-  	console.log(result)
-  	return result
-
+  runQuery(jsonQueryString) {
+  	console.log("Running query: "+jsonQueryString);
+  	var message = new Message("runQuery", jsonQueryString)
+    this.socket.next(message)
   }
 
     // You really won't see a greater granularity by refreshing more frequently, unless the network is pretty busy.

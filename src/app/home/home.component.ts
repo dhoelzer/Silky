@@ -26,12 +26,17 @@ export class HomeComponent implements OnInit {
   // For searches
   matchingRows: number = 0;
   results = <any>[];
-  saddress: string = "Any";
-  daddress: string = "Any";
-  sport: string = "Any";
-  dport: string = "Any";
+  saddress: string = "x.x.x.x";
+  daddress: string = "x.x.x.x";
+  sport: string = "0-65535";
+  dport: string = "0-65535";
   startDate: string = "Today";
   endDate: string = "Today";
+  proto: string="0-255";
+  flags: string="SFRPAUCE/SFRPAUCE"
+  flagsInitial: string="SFRPAUCE/SFRPAUCE"
+  sensors: string="all"
+  trafficType: string="all"
 
   
 
@@ -40,22 +45,28 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.getLargestTransfers();
     this.getTopTCPConnections();
-    this.matchingRows = this.results.length;
+    this._silk.searchResults$.subscribe(results => {
+      this.results = results
+      this.matchingRows = this.results.length
+    })
   }
 
   doSearch() {
-    this.getResults()
+    this._silk.runQuery({
+      saddress: this.saddress,
+      daddress: this.daddress,
+      sport: this.sport,
+      dport: this.dport,
+      startDate: this.startDate,
+      endDate: this.endDate ,
+      proto: this.proto,
+      flags: this.flags,
+      flagsInitial: this.flagsInitial,
+      sensors: this.sensors,
+      trafficType: this.trafficType
+    })
     this.matchingRows = this.results.length;
   }  
-
-  getResults() {
-  	this._silk.runQuery().subscribe(
-  		results => {this.results = results},
-  		err => console.error(err),
-  		() => console.log('Processed query')
-  		);
-  }
-
 
   getTopTCPConnections() {
     this._silk.topTCPConnections$.subscribe(
