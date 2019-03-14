@@ -17,12 +17,11 @@
 
 .searchField {
 	padding: 1px;
-	margin: 0;
-	width: 15em;
+	margin: 0px;
+	min-width: 5em;
+	max-width: 5em;
 	background: #57b3f1;
-	border:left;
-	border-style: solid;
-	border-color: white;
+	border:1px solid darkgrey;
 	overflow: hidden;
 }
 
@@ -37,10 +36,10 @@
 	background:#2885c4;
 	padding: 1px;
 	margin:0;
+	min-width: 5em;
+	max-width: 5em;
+	border:1px solid darkgrey;
 	overflow:hidden;
-	border:left;
-	border-style: solid;
-	border-color: white;
 }
 
 .transfers-container {
