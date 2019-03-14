@@ -47,8 +47,8 @@ export class HomeComponent implements OnInit {
     this.getLargestTransfers();
     this.getTopTCPConnections();
     this._silk.searchResults$.subscribe(results => {
-      this.results = results.split("\n")
-      this.headings = this.results[0].split(",")
+      this.results = results.split("\n").slice(1)
+      this.headings = results.split("\n")[0].split(",")
       this.matchingRows = this.results.length
     })
   }
@@ -67,7 +67,6 @@ export class HomeComponent implements OnInit {
       sensors: this.sensors,
       trafficTypes: this.trafficTypes
     })
-    this.matchingRows = this.results.length;
   }  
 
   getTopTCPConnections() {
