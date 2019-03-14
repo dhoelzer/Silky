@@ -127,6 +127,8 @@ function runQuery(socket, parameters)
   rwFilter += " --proto="+proto
   if(flags !== "any") { rwFilter += " --flags-all="+flags }
   if(flagsInitial !== "any") { rwFilter += " --flags-initial="+flagsInitial }
+  if(startDate !== "Today") { rwFilter += " --start-date="+startDate }
+  if(endDate !== "Today") { rwFilter += " --end-date="+endDate }
 
   if(sensors == "all") { } else { rwFilter += " --sensors="+sensors }
   rwFilter += " --type="+trafficTypes
