@@ -28,10 +28,6 @@
 
 .searchHeadings {
 	display: flex;
-	padding: 1px;
-	margin:0;
-	overflow:hidden;
-	width: 15em;
 	flex-wrap: nowrap;
 	flex-direction: row;
 }
@@ -39,6 +35,9 @@
 .heading {
 	padding: 2px;
 	background:#2885c4;
+	padding: 1px;
+	margin:0;
+	overflow:hidden;
 	border:left;
 	border-style: solid;
 	border-color: white;
