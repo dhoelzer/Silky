@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit {
   flags: string="SFRPAUCE/SFRPAUCE"
   flagsInitial: string="SFRPAUCE/SFRPAUCE"
   sensors: string="all"
-  trafficType: string="all"
+  trafficTypes: string="all"
 
   
 
