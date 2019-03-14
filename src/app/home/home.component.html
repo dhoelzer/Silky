@@ -41,6 +41,9 @@
 	<div class="col">
 		<p search-container>Results</p>
 		<p>Matching rows: {{ matchingRows }}</p>
+		<div class="searchHeadings">
+			<div *ngFor="let heading of headings" id="heading">{{heading}}</div>
+		</div>
 		<div *ngFor="let result of results">
 			{{ result }}
 		</div>

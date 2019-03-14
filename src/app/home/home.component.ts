@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
 
   // For searches
   matchingRows: number = 0;
+  headings = []
   results = <any>[];
   saddress: string = "x.x.x.x";
   daddress: string = "x.x.x.x";
@@ -47,6 +48,7 @@ export class HomeComponent implements OnInit {
     this.getTopTCPConnections();
     this._silk.searchResults$.subscribe(results => {
       this.results = results.split("\n")
+      this.headings = results[0].split(",")
       this.matchingRows = this.results.length
     })
   }
