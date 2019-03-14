@@ -133,6 +133,7 @@ function runQuery(socket, parameters)
 
   rwFilter += " --pass=stdout | rwcut --all-fields --num-recs=100 --delimited=, "
 
+  console.log(rwFilter)
   child = exec(rwFilter, function(error, stdout, stderr) {
     sendResults('queryResults', stdout)
     console.log(stderr)
