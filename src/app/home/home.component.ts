@@ -34,8 +34,8 @@ export class HomeComponent implements OnInit {
   startDate: string = "Today";
   endDate: string = "Today";
   proto: string="0-255";
-  flags: string="SFRPAUCE/SFRPAUCE"
-  flagsInitial: string="SFRPAUCE/SFRPAUCE"
+  flags: string="any"
+  flagsInitial: string="any"
   sensors: string="all"
   trafficTypes: string="all"
 

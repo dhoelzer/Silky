@@ -11,6 +11,9 @@
 
 .searchRow {
 	display: flex;
+	color:black;
+	font-size:90%;
+	font-family:monospace;
 	flex-wrap: nowrap;
 	flex-direction: row;
 }
