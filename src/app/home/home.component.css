@@ -15,12 +15,22 @@
 	flex-direction: row;
 }
 
-.searchField {
+.searchField0 {
 	padding: 1px;
 	margin: 0px;
 	min-width: 5em;
 	max-width: 5em;
 	background: #57b3f1;
+	border:1px solid darkgrey;
+	overflow: hidden;
+}
+
+.searchField1 {
+	padding: 1px;
+	margin: 0px;
+	min-width: 5em;
+	max-width: 5em;
+	background: #2885c4;
 	border:1px solid darkgrey;
 	overflow: hidden;
 }
