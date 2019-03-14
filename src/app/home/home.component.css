@@ -9,23 +9,34 @@
 
 }
 
+.searchRow {
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: row;
+}
+
 .searchField {
-	float:left;
-	padding: 2em;
+	padding: 2px;
 	background: #57b3f1;
 	border:left;
 	border-style: solid;
 	border-color: white;
 }
 
+.searchHeadings {
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: row;
+}
+
 .heading {
-	float:left;
-	padding: 2em;
+	padding: 2px;
 	background:#2885c4;
 	border:left;
 	border-style: solid;
 	border-color: white;
 }
+
 .transfers-container {
 	display: grid;
 	grid-template-columns: repeat(6, auto);
