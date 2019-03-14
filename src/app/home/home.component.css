@@ -9,7 +9,16 @@
 
 }
 
-div .heading {
+.searchField {
+	float:left;
+	padding: 2em;
+	background: #57b3f1;
+	border:left;
+	border-style: solid;
+	border-color: white;
+}
+
+.heading {
 	float:left;
 	padding: 2em;
 	background:#2885c4;
