@@ -45,8 +45,10 @@
 			<div *ngFor="let heading of headings" class="heading">{{heading}}</div>
 		</div>
 		<div *ngFor="let result of results;let i = index" class="searchRow">
-			<div *ngIf="i>0" *ngFor="let field of (result.split(','))" class="searchField{{i % 2}}">
-				{{ field }}
+			<div div *ngIf="i>0">
+				<div *ngFor="let field of (result.split(','))" class="searchField{{i % 2}}">
+					{{ field }}
+				</div>
 			</div>
 		</div>
 	</div>
