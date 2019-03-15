@@ -120,6 +120,9 @@ function runQuery(socket, parameters)
   flagsInitial = parameters.flagsInitial
   sensors = parameters.sensors
   trafficTypes = parameters.trafficTypes
+  minDuration = parameters.minDuration
+  maxDuration = parameters.maxDuration
+  
   rwFilter += " --saddress="+saddress
   rwFilter += " --daddress="+daddress
   rwFilter += " --sport="+sport
