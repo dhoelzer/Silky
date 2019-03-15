@@ -38,6 +38,8 @@ export class HomeComponent implements OnInit {
   flagsInitial: string="any"
   sensors: string="all"
   trafficTypes: string="all"
+  minDuration: string="0"
+  maxDuration: string="86400"
 
   
 
