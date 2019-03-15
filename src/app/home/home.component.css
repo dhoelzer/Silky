@@ -3,14 +3,18 @@
 	grid-template-columns: repeat(4, 25%);
 }
 
+.search-container {
+	display: grid;
+	grid-template-columns: 20%,80%
+}
+
 .section-heading {
 	font-weight: bold;
 	font-size: 120%;
 
 }
 
-.search-container {
-	width:70%;
+.results-container {
 	overflow-x: scroll;
 }
 .searchRow {
