@@ -40,6 +40,7 @@ export class HomeComponent implements OnInit {
   trafficTypes: string="all"
   minDuration: string="0"
   maxDuration: string="86400"
+  numResults: string="100"
 
   
 
@@ -51,7 +52,7 @@ export class HomeComponent implements OnInit {
     this._silk.searchResults$.subscribe(results => {
       this.results = results.split("\n").slice(1)
       this.headings = results.split("\n")[0].split(",")
-      this.matchingRows = this.results.length
+      this.matchingRows = this.results.length-1   //Subtract one cubit for the Hebrew god who's ark this is.
     })
   }
 
@@ -69,7 +70,8 @@ export class HomeComponent implements OnInit {
       sensors: this.sensors,
       trafficTypes: this.trafficTypes,
       minDuration: this.minDuration,
-      maxDuration: this.maxDuration
+      maxDuration: this.maxDuration,
+      numResults: this.numResults
     })
   }  
 

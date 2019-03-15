@@ -29,15 +29,18 @@
 			Source Port <input type="text" class="txt" name="sport" [(ngModel)]="sport">
 			Destination Port <input type="text" class="txt" name="dport" [(ngModel)]="dport">
 			Protocol <input type="text" class="txt" name="proto" [(ngModel)]="proto">
-			Flags (Flags-You-Require/Flags-To-Lookat) <input type="text" class="txt" name="flags" [(ngModel)]="flags">
-			Initial Flags (Flags-You-Require/Flags-To-Lookat) <input type="text" class="txt" name="flagsInitial" [(ngModel)]="flagsInitial">
+			Flags (Flags-You-Require/Flags-To-Look-At) <input type="text" class="txt" name="flags" [(ngModel)]="flags">
+			Initial Flags (Flags-You-Require/Flags-To-Look-At) <input type="text" class="txt" name="flagsInitial" [(ngModel)]="flagsInitial">
 			Start Date <input type="text" class="txt" name="startDate" [(ngModel)]="startDate">
 			End Date <input type="text" class="txt" name="endDate" [(ngModel)]="endDate">
 			Sensors <input type="text" class="txt" name="sensors" [(ngModel)]="sensors">
 			Traffic Type <input type="text" class="txt" name="trafficTypes" [(ngModel)]="trafficTypes">
 			Minimum Duration <input type="text" class="txt" name="minDuration" [(ngModel)]="minDuration">
 			Maximum Duration <input type="text" class="txt" name="maxDuration" [(ngModel)]="maxDuration">
-			<input type="submit" class="btn" value="Search" (click)="doSearch()">
+			Maximum Returned Rows <input type="text" class=txt name="numResults" ([ngModel)]="numResults">
+	  		<div>
+  				<button type=submit class="btn btn-primary" (click)="doSearch()">Search</button>
+  			</div>
 		</form>
 	</div>
 	<div class="col">

@@ -122,7 +122,8 @@ function runQuery(socket, parameters)
   trafficTypes = parameters.trafficTypes
   minDuration = parameters.minDuration
   maxDuration = parameters.maxDuration
-  
+  numResults = parameters.numResults
+
   rwFilter += " --saddress="+saddress
   rwFilter += " --daddress="+daddress
   rwFilter += " --sport="+sport
@@ -137,7 +138,7 @@ function runQuery(socket, parameters)
   if(sensors == "all") { } else { rwFilter += " --sensors="+sensors }
   rwFilter += " --type="+trafficTypes
 
-  rwFilter += " --pass=stdout | rwcut --fields="+fieldsToReturn+" --num-recs=100 --delimited=, "
+  rwFilter += " --pass=stdout | rwcut --fields="+fieldsToReturn+" --num-recs="+numResults+" --delimited=, "
 
   console.log(rwFilter)
   child = exec(rwFilter, function(error, stdout, stderr) {
