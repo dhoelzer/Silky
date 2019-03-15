@@ -129,6 +129,7 @@ function runQuery(socket, parameters)
   if(flagsInitial !== "any") { rwFilter += " --flags-initial="+flagsInitial }
   if(startDate !== "Today") { rwFilter += " --start-date="+startDate }
   if(endDate !== "Today") { rwFilter += " --end-date="+endDate }
+  rwFilter += " --duration="+minDuration+"-"+maxDuration
 
   if(sensors == "all") { } else { rwFilter += " --sensors="+sensors }
   rwFilter += " --type="+trafficTypes
