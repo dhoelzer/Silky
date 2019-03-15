@@ -67,7 +67,9 @@ export class HomeComponent implements OnInit {
       flags: this.flags,
       flagsInitial: this.flagsInitial,
       sensors: this.sensors,
-      trafficTypes: this.trafficTypes
+      trafficTypes: this.trafficTypes,
+      minDuration: this.minDuration,
+      maxDuration: this.maxDuration
     })
   }  
 
