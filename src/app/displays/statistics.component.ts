@@ -94,9 +94,9 @@ export class StatisticsComponent implements OnInit {
             xAxes: [{
               display:false
             }],
-          //  yAxes: [{
-          //    type: 'logarithmic'
-          //  }]
+            yAxes: [{
+              type: 'logarithmic'
+            }]
           },
           title: {
             display: true,
