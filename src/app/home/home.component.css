@@ -9,6 +9,10 @@
 
 }
 
+.search-container {
+	width:70%;
+	overflow-x: scroll;
+}
 .searchRow {
 	display: flex;
 	color:black;
