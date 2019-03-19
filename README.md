@@ -15,14 +15,16 @@ To get started, clone this repository into a convenient location on your reposit
 ```
 cd Silky
 npm install --save
+npm install -g @angular/cli
 ng build --prod
+export SILKY_PORT=80
 node service.js
 ```
 
 You are now ready to connect using a web browser of your choice to port 80 on the repository.  The default username and password for Silky is:
 
-User: admin
-Password: Password1
+> User: admin
+> Password: Password1
 
 The password file is a simply text file of the format:
 
