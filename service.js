@@ -202,7 +202,7 @@ function _30DayStats()
 {
   var startTime = (new Date / 1000) - (86400*30);
   var endTime = new Date / 1000;
-  var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=6 --pass=stdout | rwcount --bin-size=86400 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
+  var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=0-255 --pass=stdout | rwcount --bin-size=86400 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
   child = exec(commandString, function(error, stdout, stderr) {
     sendResults('30DayStats', stdout)
@@ -213,7 +213,7 @@ function _24HourStats()
 {
   var startTime = (new Date / 1000) - (3600*24);
   var endTime = new Date / 1000;
-  var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=6 --pass=stdout | rwcount --bin-size=1800 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
+  var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=0-255 --pass=stdout | rwcount --bin-size=1800 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
   child = exec(commandString, function(error, stdout, stderr) {
     sendResults('24HourStats', stdout)
@@ -224,7 +224,7 @@ function _60MinuteStats()
 {
   var startTime = Math.floor((new Date / 1000) - (3600));
   var endTime = Math.floor(new Date / 1000);
-  var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=6 --pass=stdout | rwcount --bin-size=60 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
+  var commandString = "rwfilter --start-date="+startTime+" --end-date="+endTime+" --type=all --proto=0-255 --stime="+startTime+"-"+endTime+" --pass=stdout | rwcount --bin-size=60 --delimited=, --no-titles| awk  -F, 'BEGIN{print \"[\"; separator=\"\";};{print separator\"{\\\"time\\\":\\\"\"$1\"\\\", \\\"records\\\":\"$2\", \\\"bytes\\\":\"$3\", \\\"packets\\\":\"$4\"}\";separator=\",\"}END{print \"]\";}'"
 
   child = exec(commandString, function(error, stdout, stderr) {
     sendResults('60MinuteStats', stdout)
