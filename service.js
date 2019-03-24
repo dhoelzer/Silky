@@ -265,7 +265,7 @@ function sendResults(endpoint, data)
 
 setInterval(largestTransfers, (1000 * 60 * 5))
 setInterval(_10MinuteTCPPorts, (1000 * 60))
-setInterval(_60MinuteStats, (1000 * 60 * 15))
+setInterval(_60MinuteStats, (1000 * 60))
 setInterval(_24HourStats, (1000 * 60 * 60))
 setInterval(topTCPConnections, (1000 * 60 * 5))
 setInterval(topTalkers, (1000 * 60 * 5))
