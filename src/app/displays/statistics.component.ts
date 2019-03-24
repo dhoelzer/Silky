@@ -82,7 +82,7 @@ export class StatisticsComponent implements OnInit {
             display: false
           },
           tooltips: {
-          callbacks: {
+            callbacks: {
               label: function(tooltipItem, data) {
                   var value = data.datasets[0].data[tooltipItem.index];
                   if(parseInt(value) >= 1000){

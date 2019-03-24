@@ -65,7 +65,19 @@ export class TopTCPPortsComponent implements OnInit {
             display: true,
             fontColor: 'rgba(255,255,255,1)',
             text: title
-          }
+          },
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItem, data) {
+                  var value = data.datasets[0].data[tooltipItem.index];
+                  if(parseInt(value) >= 1000){
+                             return  value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                          } else {
+                             return  value;
+                          }
+              }
+            }
+          },
         },
         data: {
           labels: ports.map(i => i.port),
